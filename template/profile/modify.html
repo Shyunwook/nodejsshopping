@@ -1,0 +1,15 @@
+{% set title = "프로필 수정" %}
+{% extends "layout/base.html" %}
+ 
+{% block content -%}
+    <form role="form" action="" method="post">
+        <table class="table table-bordered">
+            <input type="hidden" name="user_id" value="{{user.id}}">
+            <tr>
+                <th>Nick name</th>
+                <td><input type="text" name="displayname" class="form-control" value="{{user.displayname}}"/></td>
+            </tr>
+        </table>
+        <button class="btn btn-primary">작성하기</button>
+    </form>
+{% endblock %}

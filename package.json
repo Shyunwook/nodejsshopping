@@ -1,0 +1,33 @@
+{
+  "name": "camp13",
+  "version": "1.0.0",
+  "description": "쇼핑몰 프로젝트",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e js,html ./server.js",
+    "dev": "nodemon ./app.js"
+  },
+  "author": "Bobby",
+  "license": "ISC",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "connect-session-sequelize": "^6.0.0",
+    "cookie-parser": "^1.4.4",
+    "csurf": "^1.10.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "express-paginate": "^1.0.0",
+    "express-session": "^1.16.1",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "mysql2": "^1.6.5",
+    "nunjucks": "^3.2.0",
+    "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
+    "passport-kakao": "0.0.5",
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.42.0",
+    "socket.io": "^2.2.0"
+  }
+}

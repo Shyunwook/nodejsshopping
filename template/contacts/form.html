@@ -1,0 +1,30 @@
+{% set title = "constacts 등록" %}
+{% extends "layout/base.html" %}
+ 
+{% block content -%}
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" /> 
+        <!-- csrf 토큰을 받을 form은 _csrf로 고정이다!! -->
+        <table class="table table-bordered">
+            <tr>
+                <th>제목</th>
+                <td><input type="text" name="title" class="form-control" value="{{contact.title}}"/></td>
+            </tr>
+            <tr>
+                <th>사진</th>
+                <td>
+                    <input type="file" name="thumbnail" />
+                    {% if contact.thumbnail %}
+                        <a href="/uploads/contact/{{ contact.thumbnail }}" target="_blank">업로드 이미지 보기</a>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td><input type="text" name="content" class="form-control" value="{{contact.content}}"/></td>
+            </tr>
+        </table>
+        <button class="btn btn-primary">작성하기</button>
+    </form>
+
+{% endblock %}
