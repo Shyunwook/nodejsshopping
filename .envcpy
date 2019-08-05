@@ -3,6 +3,12 @@ DB_USER = "아이디"
 DB_PASSWORD = "패스워드"
 DB_HOST = "DB호스트"
 
+AWS_ACCESS_KEY = "https://console.aws.amazon.com/iam/home?nc2=h_m_sc#/security_credentials"
+AWS_SECRET_KEY = "https://console.aws.amazon.com/iam/home?nc2=h_m_sc#/security_credentials"
+
+AWS_REGION = "https://console.aws.amazon.com/iam/home?nc2=h_m_sc#/security_credentials"
+AWS_BUCKET = "https://console.aws.amazon.com/iam/home?nc2=h_m_sc#/security_credentials"
+
 FACEBOOK_APPID = "https://developers.facebook.com에서 추출"
 FACEBOOK_SECRETCODE = "https://developers.facebook.com에서 추출"
 

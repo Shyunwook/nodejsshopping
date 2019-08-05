@@ -1,4 +1,5 @@
 const passwordHash = require('../helpers/passwordHash');
+const moment = require('moment');
 
 module.exports = function(sequelize, DataTypes){
     const User = sequelize.define('User',
@@ -43,12 +44,37 @@ module.exports = function(sequelize, DataTypes){
                 souceKey: 'id',
                 onDelete: 'CASCADE'
             }
-        )
+        );
+
+        User.hasMany(
+            models.Cart,
+            {
+                as: 'Cart',
+                foreignKey: 'user_id',
+                souceKey: 'id',
+                onDelete: 'CASCADE'
+            }
+        );
+
+        User.belongsToMany(models.Products, {
+            through : {
+                model: 'LikesProducts',
+                unique: false
+            },
+            as: 'Likes',
+            foreignKey: 'user_id',
+            sourceKey: 'id',
+            constraints: false
+        })
     }
 
     User.beforeCreate((user, _) => {
         user.password = passwordHash(user.password);
     });
+
+    User.prototype.dateFormat = (date) => {
+        return moment(date).format('YYYY-MM-DD');
+    } 
 
     return User;
 }

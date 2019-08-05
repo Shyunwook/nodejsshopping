@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const models = require('../models');
-const loginRequired = require('../helpers/loginRequired');
+const loginRequired = require('../middleware/loginRequired');
 const paginate = require('express-paginate');
 
 const csrf = require('csurf');

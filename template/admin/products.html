@@ -2,57 +2,63 @@
 
 {% set title = "관리자 리스트" %}
 {% block content -%}
-    <table class="table table-bordered table-hover">
-        <tr>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>삭제</th>
-        </tr>
-        {% for product in products %}
-        <tr>
-            <td>
-                <a href="/admin/products/detail/{{ product.id }}">
-                    {{ product.name }}
-                </a>
-            </td>
-            <td>
-                {{ product.dateFormat(product.createdAt) }}
-            </td>
-            <td>
-                <a href="/admin/products/delete/{{ product.id }}" 
-                class="btn btn-danger"
-                onclick="return confirm('삭제하시겠습니까?')">
-                    삭제
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <nav>
-        <ul class="pagination">
-        {% if paginate.hasPreviousPages %}
-            <li>
-                <a href="{{ paginate.href(true) }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        {% endif %}
-        
-        {% for page in pages %}
-            <li class="{% if paginate.page == page.number %} active {% endif %}">
-                <a href="{{ page.url }}">{{ page.number }} </a>
-            </li>
-        {% endfor %}
-    
-        {% if paginate.hasNextPages( pageCount ) %}
-            <li>
-                <a href="{{ paginate.href() }}">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        {% endif %}
-        </ul>
-    </nav>
-    <a href="/admin/products/write" class="btn btn-default">작성하기</a>
-
+    {% include "layout/sidebar.html" %} 
+    <!-- 위와 같은 식의 include는 권장하는 방식은 아님 -->
+    <!-- 차라리 layout/admin.html 을 따로 만들어서 어드민 하위 파일들은 다른 템플릿을 사용하도록 하는 것이 좋을 듯 -->
+    <!-- 그렇다면 base.html 과 겹치는 부분이 존재할 텐데 겹치는 부분만 따로 또 template로 빼서 base와 admin이 상속? 
+    받도록해서 사용하면 될 듯 하다 -->
+        <div class="col-sm-10">            
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>삭제</th>
+                </tr>
+                {% for product in products %}
+                <tr>
+                    <td>
+                        <a href="/admin/products/detail/{{ product.id }}">
+                            {{ product.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ product.dateFormat(product.createdAt) }}
+                    </td>
+                    <td>
+                        <a href="/admin/products/delete/{{ product.id }}" 
+                        class="btn btn-danger"
+                        onclick="return confirm('삭제하시겠습니까?')">
+                            삭제
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <nav>
+                <ul class="pagination">
+                {% if paginate.hasPreviousPages %}
+                    <li>
+                        <a href="{{ paginate.href(true) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for page in pages %}
+                    <li class="{% if paginate.page == page.number %} active {% endif %}">
+                        <a href="{{ page.url }}">{{ page.number }} </a>
+                    </li>
+                {% endfor %}
+            
+                {% if paginate.hasNextPages( pageCount ) %}
+                    <li>
+                        <a href="{{ paginate.href() }}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+            </nav>
+            <a href="/admin/products/write" class="btn btn-default">작성하기</a>
+        </div>
 {% endblock %}

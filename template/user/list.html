@@ -1,0 +1,21 @@
+{% extends "layout/base.html" %}
+
+{% block content -%}
+
+    {% for  like in  user.Likes %}
+        <div>
+            <img src="/uploads/product/{{ like.thumbnail }}">
+            </br>
+            <span>태그 리스트 : </span>
+            {% for tag in like.Tag%}
+                {{ tag.name }}
+            {% endfor %}
+            </br>
+            <span>좋아요한 사용자 : </span>
+            {% for user in like.LikeUser%}
+                {{ user.displayname }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+{% endblock%}

@@ -1,13 +1,21 @@
 {% set title = "쇼핑몰 메인화면" %}
 {% extends "layout/base.html" %}
  
+
+ {# 좋아요 불러오기 #}
+{% from "macro/like.html" import like %}
+
+{# 태그 불러오기 #}
+{% from "macro/tag.html" import view_tag %}
+
 {% block content -%}
 
     <div class="container" id="masonry_container">
-        {% for product in products %}
-        <div class="masonry-grid">
+    {% for product in products %}
+    <div class="masonry-grid">
+        <a href="/products/{{ product.id }}">
             {% if product.thumbnail %}
-                <img src="/uploads/product/{{ product.thumbnail }}">
+                <img src="{{ product.thumbnail }}">
             {% endif %}
             <p>
                 {{ product.name }}<br />
@@ -15,9 +23,25 @@
                     {{ product.dateFormat( product.createdAt ) }}
                 )
             </p>
-        </div>
-        {% endfor %}
+        </a>
+
+        <!-- 태그 불러오기 -->
+        {{ view_tag( product.Tag ) }}
+
+        <span id="like_area_{{ product.id }}">
+            {{ like( isLogin , product.id , userLikes ) }}
+        </span>
+
+        <p class="like_people">
+            {% if product.LikeUser.length > 0 %}
+                {{ product.LikeUser[product.LikeUser.length - 1].displayname }}님
+                {% if product.LikeUser.length > 1 %}
+                외 {{ product.LikeUser.length - 1 }}명이 좋아합니다{% else %}이 좋아합니다{% endif %}
+            {% endif %}
+        </p>
     </div>
+    {% endfor %}
+</div>
 
 <style type="text/css">
 .masonry-grid img { max-width: 260px; }

@@ -2,37 +2,73 @@
 {% extends "layout/base.html" %}
  
 {% block content -%}
-    <form action="" method="post" enctype="multipart/form-data" id="editForm">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}" /> 
-        <!-- csrf 토큰을 받을 form은 _csrf로 고정이다!! -->
-        <table class="table table-bordered">
-            <tr>
-                <th>제품명</th>
-                <td><input type="text" name="name" class="form-control" value="{{product.name}}"/></td>
-            </tr>
-            <tr>
-                <th>섬네일</th>
-                <td>
-                    <input type="file" name="thumbnail" />
-                    {% if product.thumbnail %}
-                        <a href="/uploads/{{ product.thumbnail }}" target="_blank">업로드 이미지 보기</a>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>가격</th>
-                <td><input type="text" name="price" class="form-control" value="{{product.price}}"/></td>
-            </tr>
-            <tr>
-                <th>설명</th>
-                <td>
-                    <textarea name="description" class="form-control" id="summernote">{{ product.description }}</textarea>
-                </td>
-            </tr>
-        </table>
-        <button class="btn btn-primary">작성하기</button>
-    </form>
+    {% include "layout/sidebar.html" %}
+        <div class="col-sm-10">
+            {% if '/admin/products/edit' in req_path %}
+                <form action="/admin/upload/products/{{ product.id }}" method="post" enctype="multipart/form-data" id="editForm">
+            {% else %}
+                <form action="" method="post" enctype="multipart/form-data" id="editForm">
+            {% endif %}
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" /> 
+                <!-- csrf 토큰을 받을 form은 _csrf로 고정이다!! -->
+                <table class="table table-bordered">
+                    <tr>
+                        <th>제품명</th>
+                        <td><input type="text" name="name" class="form-control" value="{{product.name}}"/></td>
+                    </tr>
+                    <tr>
+                        <th>섬네일</th>
+                        <td>
+                            <input type="file" name="thumbnail" />
+                            {% if product.thumbnail %}
+                                <a href="{{ product.thumbnail }}" target="_blank">업로드 이미지 보기</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>가격</th>
+                        <td><input type="text" name="price" class="form-control" value="{{product.price}}"/></td>
+                    </tr>
+                    <tr>
+                        <th>설명</th>
+                        <td>
+                            <textarea name="description" class="form-control" id="summernote">{{ product.description }}</textarea>
+                        </td>
+                    </tr>
+                    {# 수정시에만 작동한다 #}
+                    {% if '/admin/products/edit/' in req_path %}
+                    <tr>
+                        <th>태그</th>
+                        <td>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <input type="text" id="tag_input" class="form-control" placeholder="입력후 엔터 태그추가 버튼을 눌러주세요">
+                                </div>
+                                <div class="col-sm-7">
+                                    <a class="btn btn-primary btn-sm btn_select" id="tag_submit" style="display: inline-block">
+                                        태그 추가
+                                    </a>
+                                </div>
+                            </div>
 
+                            <div id="tag_area">
+                                {% for tag in product.Tag %}
+                                    <div class="icon_tag">
+                                        {{ tag.name }}
+                                        <a href="#" class="delete_tag" tag_id="{{ tag.id }}">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                        </td>
+                    </tr>
+                    {% endif %}                    
+                </table>
+                <button class="btn btn-primary">작성하기</button>
+            </form>
+        </div>
 <!-- 스타일관련 -->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.6/summernote.css" rel="stylesheet">
 <!-- 자바스크립트관련 -->
@@ -42,6 +78,80 @@
 
 <script>
     $(document).ready(function(){
+
+        $('#tag_submit').click(function(e){
+            e.preventDefault();
+            var $product_id = "{{ product.id }}";
+            var $tag_input = $('#tag_input');
+            if(!$tag_input.val()){
+                alert('태그명을 입력하세요');
+                $tag_input.focus();
+                return false;
+            }
+
+            if($tag_input.val().length < 2 ){
+                alert('두글자 이상 입력하세요.');
+                $tag_input.focus();
+                return false;
+            }
+
+            $.ajax({
+                url : '/admin/tag',
+                type: 'post',
+                data : {
+                    name : $tag_input.val().trim(),
+                    product_id : $product_id
+                }
+            })
+            .done(function(result){
+
+                if(result.status.length){
+                    var tag = result.tag;
+                    $('#tag_area').append('\
+                        <div class="icon_tag">' +
+                            tag.name + 
+                            ' <a href="#" class="delete_tag" \
+                                tag_id="' + tag.id +'" > \
+                                <i class="fa fa-times" aria-hidden="true"></i> \
+                            </a> \
+                        </div>\
+                    ');
+                    // 추가후 검색 초기화
+                    $('#tag_input').val('');
+                }else{
+                    alert('이미 있는 등록된 태그입니다.');
+                }
+                
+            })
+            .fail(function(result){
+                console.log(result);
+                alert('오류 발생');
+            });
+        });
+
+        $(document).on('click','.delete_tag', function(e){
+            e.preventDefault();
+            if(!confirm('삭제하시겠습니까?')){
+                return false;
+            }
+
+            var product_id = "{{ product.id }}";
+            var $self = $(this);
+
+            $.ajax({
+                url : '/admin/tag/'+ product_id + '/' + $(this).attr('tag_id'),
+                type : 'delete'
+            }).
+            done(function(result){
+                if(result){
+                    $self.parent().remove();
+                }
+            })
+            .fail(function(result){
+                console.log(result);
+            });
+
+        });
 
         $('#editForm').submit(function(){
             $('input[name=files]').remove();

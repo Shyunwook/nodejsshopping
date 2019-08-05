@@ -10,7 +10,7 @@ const io = listen(server);
 
 //socket io passport 접근하기 위한 미들웨어 적용
 io.use( (socket, next) => {
-    sessionMiddleWare(socket.request, socket.request.res, next);
+    app.sessionMiddleWare(socket.request, socket.request.res, next);
 });
   
 require('./helpers/socketConnection')(io);

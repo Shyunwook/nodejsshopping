@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ title }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/common.css">
     <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -17,6 +18,8 @@
     <!--폰트어섬추가 -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--폰트어섬추가 -->
+
+    <script type="text/javascript" src="/static/common.js"></script>
 </head>
 <body>
     <div class="container" style="padding-top: 10px;">
@@ -34,19 +37,36 @@
                 </div> 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
                     <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="/">Home</a>
-                        </li>
-                        <li><a href="/admin/products">ADMIN</a></li>
-                        <li><a href="/chat">CHAT</a></li>
-                        {% if isLogin %}
-                            <li><a href="/accounts/logout" onclick="return confirm('로그아웃 하시겠습니까?')">LOGOUT</a></li>
-                            <li><a href="/profile/edit">PROFILE</a></li>
-                        {% else %}
-                            <li><a href="/accounts/join">JOIN</a></li> 
-                            <li><a href="/accounts/login">LOGIN</a></li>  
-                        {% endif %}
+                        <ul class="nav navbar-nav">
+                            {% from "macro/link.html" import link %}
+                            {{ link( '/' , "Home" , req_path ) }}
+                            {% if req_user.username == 'admin' %}
+                                {{ link( '/admin/products' , "ADMIN" , req_path ) }}
+                                {{ link( '/admin/users' , "USERS" , req_path ) }}
+                            {% endif %}
+                            {{ link( '/contacts' , "CONTACTS" , req_path ) }}
+                            {{ link( '/chat' , "CHAT" , req_path ) }}
+                            {{ link( '/cart' , "CART" , req_path ) }}
+                            {% if isLogin %}
+                                <li><a href="/accounts/logout" onclick="return confirm('로그아웃 하시겠습니까?')">LOGOUT</a></li>
+                                <li><a href="/user/{{req_user.id}}">MY</a></li>
+                            {% else %}
+                                {{ link( '/accounts/join' , "JOIN" , req_path ) }}
+                                {{ link( '/accounts/login' , "LOGIN" , req_path ) }}
+                            {% endif %}
+                        </ul>
+                        <form class="navbar-form navbar-left" method="get" action="/">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" required 
+                                    value="{{ req_query.name }}"
+                                    placeholder="태그 또는 제품명 검색">
+                            </div>
+                            <button type="submit" class="btn btn-default">검색</button>
+                        </form>
                     </ul> 
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/checkout/nomember">구매조회</a></li> 
+                    </ul>
                 </div> 
             </div> 
         </nav>
