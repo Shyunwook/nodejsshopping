@@ -11,7 +11,7 @@
   "author": "Bobby",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.488.0",
+    "aws-sdk": "^2.814.0",
     "cheerio": "^1.0.0-rc.3",
     "connect-flash": "^0.1.1",
     "connect-session-sequelize": "^6.0.0",
